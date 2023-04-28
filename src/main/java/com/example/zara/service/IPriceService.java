@@ -4,10 +4,11 @@ import com.example.zara.domain.Price;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface IPriceService {
 
-    List<Price> findPrice(LocalDateTime date, Long productId, Integer brandId);
+    Optional<Price> findPrice(LocalDateTime date, Long productId, Integer brandId);
 
     List<Price> findAll();
 }

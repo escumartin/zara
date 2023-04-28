@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PriceController {
@@ -20,12 +21,12 @@ public class PriceController {
 
 
     @GetMapping("/price")
-    public ResponseEntity<List<Price>> getPrice(
+    public ResponseEntity<Optional<Price>> getPrice(
             @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
             @RequestParam(name = "productId") Long productId,
             @RequestParam(name = "brandId") Integer brandId) {
 
-        List<Price> prices = priceService.findPrice(date, productId, brandId);
+        Optional<Price> prices = priceService.findPrice(date, productId, brandId);
 
         if (prices.isEmpty()) {
             return ResponseEntity.noContent().build();

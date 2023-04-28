@@ -11,8 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,16 +27,7 @@ class PriceControllerTest {
         Long productId = 35455L;
         Integer brandId = 1;
 
-        ResponseEntity<List<Price>> response = priceController.getPrice(date, productId, brandId);
-
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        if (Objects.requireNonNull(response.getBody()).size() >= 1) {
-            for (Price price : response.getBody()) {
-                Assert.assertEquals(brandId, price.getBrandId());
-                Assert.assertEquals(productId, price.getProductId());
-                Assert.assertTrue(price.getStartDate().isBefore(date) && price.getEndDate().isAfter(date));
-            }
-        }
+        asserts(date, productId, brandId);
     }
 
 
@@ -47,16 +37,7 @@ class PriceControllerTest {
         Long productId = 35455L;
         Integer brandId = 1;
 
-        ResponseEntity<List<Price>> response = priceController.getPrice(date, productId, brandId);
-
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        if (Objects.requireNonNull(response.getBody()).size() >= 1) {
-            for (Price price : response.getBody()) {
-                Assert.assertEquals(brandId, price.getBrandId());
-                Assert.assertEquals(productId, price.getProductId());
-                Assert.assertTrue(price.getStartDate().isBefore(date) && price.getEndDate().isAfter(date));
-            }
-        }
+        asserts(date, productId, brandId);
     }
 
 
@@ -66,16 +47,7 @@ class PriceControllerTest {
         Long productId = 35455L;
         Integer brandId = 1;
 
-        ResponseEntity<List<Price>> response = priceController.getPrice(date, productId, brandId);
-
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        if (Objects.requireNonNull(response.getBody()).size() >= 1) {
-            for (Price price : response.getBody()) {
-                Assert.assertEquals(brandId, price.getBrandId());
-                Assert.assertEquals(productId, price.getProductId());
-                Assert.assertTrue(price.getStartDate().isBefore(date) && price.getEndDate().isAfter(date));
-            }
-        }
+        asserts(date, productId, brandId);
     }
 
 
@@ -85,16 +57,7 @@ class PriceControllerTest {
         Long productId = 35455L;
         Integer brandId = 1;
 
-        ResponseEntity<List<Price>> response = priceController.getPrice(date, productId, brandId);
-
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        if (Objects.requireNonNull(response.getBody()).size() >= 1) {
-            for (Price price : response.getBody()) {
-                Assert.assertEquals(brandId, price.getBrandId());
-                Assert.assertEquals(productId, price.getProductId());
-                Assert.assertTrue(price.getStartDate().isBefore(date) && price.getEndDate().isAfter(date));
-            }
-        }
+        asserts(date, productId, brandId);
     }
 
 
@@ -104,15 +67,19 @@ class PriceControllerTest {
         Long productId = 35455L;
         Integer brandId = 1;
 
-        ResponseEntity<List<Price>> response = priceController.getPrice(date, productId, brandId);
+        asserts(date, productId, brandId);
+    }
+
+
+    private void asserts(LocalDateTime date, Long productId, Integer brandId) {
+        ResponseEntity<Optional<Price>> response = priceController.getPrice(date, productId, brandId);
 
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        if (Objects.requireNonNull(response.getBody()).size() >= 1) {
-            for (Price price : response.getBody()) {
-                Assert.assertEquals(brandId, price.getBrandId());
-                Assert.assertEquals(productId, price.getProductId());
-                Assert.assertTrue(price.getStartDate().isBefore(date) && price.getEndDate().isAfter(date));
-            }
+        Optional<Price> price = response.getBody();
+        if (price != null && price.isPresent()) {
+            Assert.assertEquals(brandId, price.get().getBrandId());
+            Assert.assertEquals(productId, price.get().getProductId());
+            Assert.assertTrue(price.get().getStartDate().isBefore(date) && price.get().getEndDate().isAfter(date));
         }
     }
 }

@@ -1,30 +1,29 @@
-package com.example.zara.domain;
+package com.example.zara.infrastructure.model;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "PRICES")
-public class Price {
+public class PriceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "BRAND_ID")
-    private Integer brandId;
+    private Long brandId;
 
     @Column(name = "START_DATE")
     private LocalDateTime startDate;
@@ -42,21 +41,8 @@ public class Price {
     private Integer priority;
 
     @Column(name = "PRICE")
-    private Double price;
+    private BigDecimal price;
 
-    @Column(name = "CURR")
+    @Column(name = "CURRENCY")
     private String currency;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Price price = (Price) o;
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

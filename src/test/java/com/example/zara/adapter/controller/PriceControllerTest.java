@@ -115,15 +115,17 @@ class PriceControllerTest {
         Long brandId = 1L;
         Long productId = 35455L;
 
-        // Assuming no price is available for the given parameters
-        when(priceApplicationService.getPrice(brandId, productId, date)).thenReturn(null);
+        Price expectedPrice = new Price(1L, date.minusHours(1), date.plusHours(1), 3, productId, 1, new BigDecimal("38.95"), "EUR");
+
+        when(priceApplicationService.getPrice(brandId, productId, date)).thenReturn(expectedPrice);
 
         // Act
         ResponseEntity<Price> response = priceController.getPrice(date, productId, brandId);
 
         // Assert
         verify(priceApplicationService, times(1)).getPrice(brandId, productId, date);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPrice, response.getBody());
     }
 }

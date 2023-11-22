@@ -1,8 +1,8 @@
-package com.example.zara.adapter.controller;
+package com.example.zara.controller;
 
 import com.example.zara.application.PriceApplicationService;
 import com.example.zara.domain.model.Price;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.zara.infrastructure.controller.PriceController;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;

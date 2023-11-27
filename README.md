@@ -6,7 +6,7 @@
 
 - **Centro (Dominio):** El paquete `domain` contiene las clases que representan el núcleo del dominio (`Price` y `PriceRepository`). Este es el corazón de la aplicación y contiene la lógica empresarial.
 
-- **Adaptadores (Adapters):** Los paquetes `application`, `adapter`, y `infrastructure` contienen adaptadores que conectan el núcleo con el mundo exterior. `PriceApplicationService` actúa como un adaptador de aplicación, `PriceController` es un adaptador de interfaz de usuario, y `JpaPriceRepository` y `SpringDataJpaPriceRepository` son adaptadores de infraestructura.
+- **Adaptadores (Adapters):** Los paquetes `application `y `infrastructure` contienen adaptadores que conectan el núcleo con el mundo exterior. `PriceApplicationService` actúa como un adaptador de aplicación, `PriceController` es un adaptador de interfaz de usuario, y `JpaPriceRepository` y `SpringDataJpaPriceRepository` son adaptadores de infraestructura.
 
 ### Independencia de la Infraestructura:
 

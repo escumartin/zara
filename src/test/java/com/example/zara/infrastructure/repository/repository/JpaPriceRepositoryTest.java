@@ -1,7 +1,8 @@
-package com.example.zara.infrastructure.repository;
+package com.example.zara.infrastructure.repository.repository;
 
 import com.example.zara.domain.model.Price;
 import com.example.zara.infrastructure.model.PriceEntity;
+import com.example.zara.infrastructure.repository.JpaPriceRepository;
 import com.example.zara.infrastructure.springdata.SpringDataJpaPriceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

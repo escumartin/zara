@@ -1,10 +1,11 @@
 package com.example.zara.infrastructure.repository;
 
 
-import com.example.zara.domain.model.Price;
 import com.example.zara.domain.excepiton.PriceNotFoundException;
-import com.example.zara.domain.repository.PriceRepository;
 import com.example.zara.domain.excepiton.RepositoryException;
+import com.example.zara.domain.model.Price;
+import com.example.zara.domain.repository.PriceRepository;
+import com.example.zara.infrastructure.mapper.PriceMapper;
 import com.example.zara.infrastructure.model.PriceEntity;
 import com.example.zara.infrastructure.springdata.SpringDataJpaPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class JpaPriceRepository implements PriceRepository {
                             brandId, productId, date, date, 0);
 
             if (!priceEntities.isEmpty()) {
-                return mapToDomain(priceEntities.get(0));
+                return PriceMapper.mapToDomain(priceEntities.get(0));
             }
 
             throw new PriceNotFoundException("Price not found for brandId, productId, and date.");
@@ -43,22 +44,5 @@ public class JpaPriceRepository implements PriceRepository {
             throw new RepositoryException("Error while retrieving price.", e);
         }
 
-    }
-
-
-    private Price mapToDomain(PriceEntity priceEntity) {
-        if (priceEntity != null) {
-            return new Price(
-                    priceEntity.getBrandId(),
-                    priceEntity.getStartDate(),
-                    priceEntity.getEndDate(),
-                    priceEntity.getPriceList(),
-                    priceEntity.getProductId(),
-                    priceEntity.getPriority(),
-                    priceEntity.getPrice(),
-                    priceEntity.getCurrency()
-            );
-        }
-        return null;
     }
 }

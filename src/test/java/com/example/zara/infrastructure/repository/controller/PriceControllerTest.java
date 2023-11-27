@@ -1,4 +1,4 @@
-package com.example.zara.controller;
+package com.example.zara.infrastructure.repository.controller;
 
 import com.example.zara.application.PriceApplicationService;
 import com.example.zara.domain.model.Price;

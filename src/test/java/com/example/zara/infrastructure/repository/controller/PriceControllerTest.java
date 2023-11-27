@@ -1,6 +1,6 @@
 package com.example.zara.infrastructure.repository.controller;
 
-import com.example.zara.application.PriceApplicationService;
+import com.example.zara.application.impl.PriceApplicationServiceImpl;
 import com.example.zara.domain.model.Price;
 import com.example.zara.infrastructure.controller.PriceController;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 class PriceControllerTest {
 
     @Mock
-    private PriceApplicationService priceApplicationService;
+    private PriceApplicationServiceImpl priceApplicationService;
 
     @InjectMocks
     private PriceController priceController;

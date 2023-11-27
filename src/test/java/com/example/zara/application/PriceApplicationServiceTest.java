@@ -1,5 +1,6 @@
 package com.example.zara.application;
 
+import com.example.zara.application.impl.PriceApplicationServiceImpl;
 import com.example.zara.domain.model.Price;
 import com.example.zara.domain.repository.PriceRepository;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 class PriceApplicationServiceTest {
 
     @InjectMocks
-    private PriceApplicationService priceApplicationService;
+    private PriceApplicationServiceImpl priceApplicationService;
 
     @Mock
     private PriceRepository priceRepository;

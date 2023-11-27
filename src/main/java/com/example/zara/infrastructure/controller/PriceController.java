@@ -1,6 +1,6 @@
 package com.example.zara.infrastructure.controller;
 
-import com.example.zara.application.PriceApplicationService;
+import com.example.zara.application.impl.PriceApplicationServiceImpl;
 import com.example.zara.domain.model.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,11 +17,11 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/prices")
 public class PriceController {
 
-    private final PriceApplicationService priceApplicationService;
+    private final PriceApplicationServiceImpl priceApplicationService;
 
 
     @Autowired
-    public PriceController(PriceApplicationService priceApplicationService) {
+    public PriceController(PriceApplicationServiceImpl priceApplicationService) {
         this.priceApplicationService = priceApplicationService;
     }
 

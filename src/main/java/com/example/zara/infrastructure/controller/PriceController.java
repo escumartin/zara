@@ -2,7 +2,7 @@ package com.example.zara.infrastructure.controller;
 
 import com.example.zara.application.impl.PriceApplicationServiceImpl;
 import com.example.zara.domain.model.Price;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,23 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/prices")
 public class PriceController {
 
     private final PriceApplicationServiceImpl priceApplicationService;
 
-
-    @Autowired
-    public PriceController(PriceApplicationServiceImpl priceApplicationService) {
-        this.priceApplicationService = priceApplicationService;
-    }
-
-
     @GetMapping("/getPrice")
     public ResponseEntity<Price> getPrice(
             @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
-            @RequestParam(name = "productId") Long productId,
-            @RequestParam(name = "brandId") Long brandId) {
+            @RequestParam(name = "productId") Long productId, @RequestParam(name = "brandId") Long brandId) {
 
         Price price = priceApplicationService.getPrice(brandId, productId, date);
 

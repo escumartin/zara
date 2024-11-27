@@ -6,22 +6,16 @@ import com.example.zara.domain.excepiton.PriceNotFoundException;
 import com.example.zara.domain.excepiton.RepositoryException;
 import com.example.zara.domain.model.Price;
 import com.example.zara.domain.repository.PriceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
 @Service
 public class PriceApplicationServiceImpl implements PriceApplicationService {
 
     private final PriceRepository priceRepository;
-
-
-    @Autowired
-    public PriceApplicationServiceImpl(PriceRepository priceRepository) {
-        this.priceRepository = priceRepository;
-    }
-
 
     public Price getPrice(Long brandId, Long productId, LocalDateTime date) {
         try {

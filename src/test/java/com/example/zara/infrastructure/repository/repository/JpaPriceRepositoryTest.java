@@ -1,83 +1,60 @@
 package com.example.zara.infrastructure.repository.repository;
 
-import com.example.zara.domain.model.Price;
 import com.example.zara.infrastructure.model.PriceEntity;
-import com.example.zara.infrastructure.repository.JpaPriceRepository;
 import com.example.zara.infrastructure.springdata.SpringDataJpaPriceRepository;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class JpaPriceRepositoryTest {
 
     @Autowired
-    private JpaPriceRepository jpaPriceRepository;
+    private SpringDataJpaPriceRepository jpaPriceRepository;
 
-    @MockBean
-    private SpringDataJpaPriceRepository springDataJpaPriceRepository;
+    @ParameterizedTest
+    @CsvSource({ "2020-06-14T10:00, 35.50, EUR, 1, 35455, 0, 2020-06-14T00:00, 2020-12-31T23:59:59",
+            "2020-06-14T16:00, 25.45, EUR, 2, 35455, 1, 2020-06-14T15:00, 2020-06-14T18:30:00",
+            "2020-06-14T21:00, 35.50, EUR, 4, 35455, 0, 2020-06-14T00:00, 2020-12-31T23:59:59",
+            "2020-06-15T10:00, 30.50, EUR, 3, 35455, 1, 2020-06-15T00:00, 2020-06-15T11:00:00",
+            "2020-06-16T21:00, 38.95, EUR, 4, 35455, 1, 2020-06-15T16:00, 2020-12-31T23:59:59" })
+    void testGetPrice(String requestTimeStr, String expectedPrice, String expectedCurrency, Integer priceList,
+            Long productId, Integer priority, String startDateStr, String endDateStr) {
 
-    @Test
-    void testGetPrice() {
-        testGetPriceScenario(
-                LocalDateTime.of(2020, 6, 14, 10, 0),
-                createPriceEntity(1L, LocalDateTime.of(2020, 6, 14, 0, 0), LocalDateTime.of(2020, 12, 31, 23, 59, 59),
-                        1, 35455L, 0, new BigDecimal("35.50"), "EUR")
-        );
+        LocalDateTime requestTime = LocalDateTime.parse(requestTimeStr);
+        LocalDateTime startDate = LocalDateTime.parse(startDateStr);
+        LocalDateTime endDate = LocalDateTime.parse(endDateStr);
 
-        testGetPriceScenario(
-                LocalDateTime.of(2020, 6, 14, 16, 0),
-                createPriceEntity(1L, LocalDateTime.of(2020, 6, 14, 15, 0), LocalDateTime.of(2020, 6, 14, 18, 30, 0),
-                        2, 35455L, 1, new BigDecimal("25.45"), "EUR")
-        );
+        PriceEntity expectedPriceEntity = createPriceEntity(1L, startDate, endDate, priceList, productId, priority,
+                new BigDecimal(expectedPrice), expectedCurrency);
 
-        testGetPriceScenario(
-                LocalDateTime.of(2020, 6, 14, 21, 0),
-                createPriceEntity(1L, LocalDateTime.of(2020, 6, 14, 16, 0), LocalDateTime.of(2020, 12, 31, 23, 59, 59),
-                        4, 35455L, 1, new BigDecimal("38.95"), "EUR")
-        );
+        List<PriceEntity> priceEntities = jpaPriceRepository.findApplicablePrices(expectedPriceEntity.getBrandId(),
+                expectedPriceEntity.getProductId(), requestTime);
 
-        testGetPriceScenario(
-                LocalDateTime.of(2020, 6, 15, 10, 0),
-                createPriceEntity(1L, LocalDateTime.of(2020, 6, 15, 0, 0), LocalDateTime.of(2020, 6, 15, 11, 0, 0),
-                        3, 35455L, 1, new BigDecimal("30.50"), "EUR")
-        );
+        assertFalse(priceEntities.isEmpty(), "Expected at least one price entity for request time " + requestTime);
 
-        testGetPriceScenario(
-                LocalDateTime.of(2020, 6, 16, 21, 0),
-                createPriceEntity(1L, LocalDateTime.of(2020, 6, 15, 16, 0), LocalDateTime.of(2020, 12, 31, 23, 59, 59),
-                        4, 35455L, 1, new BigDecimal("38.95"), "EUR")
-        );
+        PriceEntity actualPriceEntity = priceEntities.stream().max(Comparator.comparingInt(PriceEntity::getPriority))
+                .orElseThrow(() -> new AssertionError("No entity found with the highest priority"));
+
+        assertEquals(expectedPriceEntity.getPrice(), actualPriceEntity.getPrice(), "Price should match.");
+        assertEquals(expectedPriceEntity.getCurrency(), actualPriceEntity.getCurrency(), "Currency should match.");
+        assertEquals(expectedPriceEntity.getPriority(), actualPriceEntity.getPriority(), "Priority should match.");
+
     }
 
-    private void testGetPriceScenario(LocalDateTime requestTime, PriceEntity expectedPriceEntity) {
-        List<PriceEntity> priceEntities = new ArrayList<>();
-        priceEntities.add(expectedPriceEntity);
-        when(springDataJpaPriceRepository.findByBrandIdAndProductIdAndStartDateBeforeAndEndDateAfterAndPriorityOrderByPriorityDesc(
-                any(), any(), any(), any(), any()))
-                .thenReturn(priceEntities);
-
-        Price result = jpaPriceRepository.getPrice(1L, 35455L, requestTime);
-
-        assertEquals(expectedPriceEntity.getBrandId(), result.getBrandId());
-        assertEquals(expectedPriceEntity.getProductId(), result.getProductId());
-        assertEquals(expectedPriceEntity.getPrice(), result.getPrice());
-        assertEquals(expectedPriceEntity.getCurrency(), result.getCurrency());
-    }
-
-    private PriceEntity createPriceEntity(
-            Long brandId, LocalDateTime startDate, LocalDateTime endDate, Integer priceList,
-            Long productId, Integer priority, BigDecimal price, String currency) {
+    private PriceEntity createPriceEntity(Long brandId, LocalDateTime startDate, LocalDateTime endDate,
+            Integer priceList, Long productId, Integer priority, BigDecimal price, String currency) {
         PriceEntity priceEntity = new PriceEntity();
         priceEntity.setBrandId(brandId);
         priceEntity.setStartDate(startDate);
@@ -90,3 +67,4 @@ class JpaPriceRepositoryTest {
         return priceEntity;
     }
 }
+

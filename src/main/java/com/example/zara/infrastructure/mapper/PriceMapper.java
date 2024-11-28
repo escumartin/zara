@@ -1,14 +1,18 @@
 package com.example.zara.infrastructure.mapper;
 
 import com.example.zara.domain.model.Price;
+import com.example.zara.infrastructure.dto.PriceDTO;
 import com.example.zara.infrastructure.model.PriceEntity;
-import org.modelmapper.ModelMapper;
+import org.mapstruct.Mapper;
 
-public class PriceMapper {
+@Mapper(componentModel = "spring")
+public interface PriceMapper {
 
-    private static final ModelMapper modelMapper = new ModelMapper();
+    Price toDomain(PriceDTO priceDTO);
 
-    public static Price mapToDomain(PriceEntity priceEntity) {
-        return (priceEntity != null) ? modelMapper.map(priceEntity, Price.class) : null;
-    }
+    PriceDTO toDTO(Price price);
+
+    PriceEntity toEntity(Price price);
+
+    Price toDomain(PriceEntity priceEntity);
 }

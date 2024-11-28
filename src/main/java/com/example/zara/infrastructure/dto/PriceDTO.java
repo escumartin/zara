@@ -1,4 +1,4 @@
-package com.example.zara.domain.model;
+package com.example.zara.infrastructure.dto;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Price {
+public class PriceDTO {
 
     private Long id;
     private Long brandId;
@@ -22,4 +22,5 @@ public class Price {
     private BigDecimal price;
     private String currency;
 }
+
 

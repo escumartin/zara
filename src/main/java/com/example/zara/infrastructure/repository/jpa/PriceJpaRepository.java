@@ -1,4 +1,4 @@
-package com.example.zara.infrastructure.springdata;
+package com.example.zara.infrastructure.repository.jpa;
 
 import com.example.zara.infrastructure.model.PriceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,11 +10,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface SpringDataJpaPriceRepository extends JpaRepository<PriceEntity, Long> {
+public interface PriceJpaRepository extends JpaRepository<PriceEntity, Long> {
 
     @Query("SELECT p FROM PriceEntity p " + "WHERE p.brandId = :brandId " + "AND p.productId = :productId "
             + "AND p.startDate <= :applicationDate " + "AND p.endDate > :applicationDate " + "ORDER BY p.priority DESC")
     List<PriceEntity> findApplicablePrices(@Param("brandId") Long brandId, @Param("productId") Long productId,
             @Param("applicationDate") LocalDateTime applicationDate);
-
 }

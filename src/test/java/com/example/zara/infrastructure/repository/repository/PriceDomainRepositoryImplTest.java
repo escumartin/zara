@@ -1,7 +1,7 @@
 package com.example.zara.infrastructure.repository.repository;
 
 import com.example.zara.infrastructure.model.PriceEntity;
-import com.example.zara.infrastructure.springdata.SpringDataJpaPriceRepository;
+import com.example.zara.infrastructure.repository.jpa.PriceJpaRepository;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class JpaPriceRepositoryTest {
+class PriceDomainRepositoryImplTest {
 
     @Autowired
-    private SpringDataJpaPriceRepository jpaPriceRepository;
+    private PriceJpaRepository jpaPriceRepository;
 
     @ParameterizedTest
     @CsvSource({ "2020-06-14T10:00, 35.50, EUR, 1, 35455, 0, 2020-06-14T00:00, 2020-12-31T23:59:59",

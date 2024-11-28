@@ -1,6 +1,7 @@
 package com.example.zara.infrastructure.repository.controller;
 
 import com.example.zara.infrastructure.repository.jpa.PriceJpaRepository;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,6 +37,12 @@ class PriceControllerIntegrationTest {
                 .andExpect(jsonPath("$.currency", is(currency))).andExpect(jsonPath("$.priceList", is(priceList)))
                 .andExpect(jsonPath("$.startDate", is(startDate))).andExpect(jsonPath("$.endDate", is(endDate)))
                 .andExpect(jsonPath("$.priority", is(priority)));
+    }
+
+    @Test
+    void testNotFound() throws Exception {
+        mockMvc.perform(get("/api/v1/prices").param("date", "2020-06-14T10:00:00").param("productId", "234524")
+                .param("brandId", "1")).andExpect(status().isNotFound());
     }
 
     static Stream<Arguments> provideTestCases() {
